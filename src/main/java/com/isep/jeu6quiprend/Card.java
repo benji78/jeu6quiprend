@@ -3,7 +3,7 @@ package com.isep.jeu6quiprend;
 import lombok.Getter;
 
 @Getter
-public class Card {
+public class Card implements Comparable<Card> {
     private final int value;
     private final int heads;
 
@@ -20,6 +20,16 @@ public class Card {
         } else {
             heads = 1;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Card-" + value;
+    }
+
+    @Override
+    public int compareTo(Card card) {
+        return Integer.compare(value, card.value);
     }
 }
 
