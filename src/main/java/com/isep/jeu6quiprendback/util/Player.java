@@ -52,4 +52,14 @@ public class Player implements Comparable<Player> {
         return Integer.compare(selectedCard.getValue(), player.selectedCard.getValue());
     }
 
+    public int chooseRandomCard(){
+        int randomCard = (int) (Math.random() * cards.getCards().size());
+        return randomCard;
+    }
+
+    public int chooseRandomRow(){
+        int randomRow = (int) (Math.random() * 4);
+        return randomRow;
+    }
+
 }

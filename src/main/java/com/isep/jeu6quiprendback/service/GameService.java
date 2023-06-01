@@ -5,15 +5,16 @@ import com.isep.jeu6quiprendback.DTO.GameResponseDto;
 import com.isep.jeu6quiprendback.DTO.StackDto;
 import com.isep.jeu6quiprendback.DTO.StartResponseDto;
 import com.isep.jeu6quiprendback.util.Game;
+import com.isep.jeu6quiprendback.util.GameLogic;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GameService {
 
-    private final Game game; // Inject the Game instance
+    private final GameLogic game; // Inject the Game instance
 
-    public GameService(Game game) {
+    public GameService(GameLogic game) {
         this.game = game;
     }
 
