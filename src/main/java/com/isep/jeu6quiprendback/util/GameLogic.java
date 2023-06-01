@@ -54,7 +54,11 @@ public class GameLogic {
             throw new IllegalStateException("Game not started");
         if (cardId < 0 || cardId > 104)
             throw new IllegalArgumentException("Card id must be between 0 and 104");
-        Player player = players[0];
+        //find player named "Player1"
+        Player player = Arrays.stream(players)
+                .filter(p -> p.getName().equals("Player1"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Player1 not found"));
         Card selectedCard = player.getCards().stream()
                 .filter(c -> c.getValue() == cardId)
                 .findFirst()
@@ -105,13 +109,13 @@ public class GameLogic {
     public void cardSelected(){
         // sort the players' selected cards by value
         Arrays.sort(players);
-        System.out.println(Arrays.toString(players));
 
         // put selected cards in the card stacks with the smallest difference
         // otherwise the player has to choose a stack, so we return a message to the client
         for (Player player : players) {
 
             Card selectedCard = player.getSelectedCard();
+            System.out.println("selected card: " + selectedCard);
             int stackDifference = Integer.MAX_VALUE;
             CardStack selectedCardStack = null;
 
