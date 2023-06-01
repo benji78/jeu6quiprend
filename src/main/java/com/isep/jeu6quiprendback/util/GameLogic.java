@@ -41,7 +41,10 @@ public class GameLogic {
     //gettAllCards
     public JSONArray getAllCards() {
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(players[0].getCards());
+        Arrays.stream(players)
+                .filter(p -> p.getName().equals("Player1"))
+                .findFirst()
+                .ifPresent(p -> jsonArray.put(p.getCards()));
         return jsonArray;
     }
 
@@ -69,12 +72,18 @@ public class GameLogic {
         if(needToTakeStack){
             jsonArray.put(getJsonCardStacks());
             jsonArray.put(getJsonScoreBoard());
-            jsonArray.put(players[0].getCards());
+            Arrays.stream(players)
+                    .filter(p -> p.getName().equals("Player1"))
+                    .findFirst()
+                    .ifPresent(p -> jsonArray.put(p.getCards()));
             jsonArray.put("error, player needs to take stack");
         } else {
             jsonArray.put(getJsonCardStacks());
             jsonArray.put(getJsonScoreBoard());
-            jsonArray.put(players[0].getCards());
+            Arrays.stream(players)
+                    .filter(p -> p.getName().equals("Player1"))
+                    .findFirst()
+                    .ifPresent(p -> jsonArray.put(p.getCards()));
             jsonArray.put("ok");
         }
 
@@ -96,6 +105,7 @@ public class GameLogic {
     public void cardSelected(){
         // sort the players' selected cards by value
         Arrays.sort(players);
+        System.out.println(Arrays.toString(players));
 
         // put selected cards in the card stacks with the smallest difference
         // otherwise the player has to choose a stack, so we return a message to the client
@@ -148,7 +158,10 @@ public class GameLogic {
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(getJsonCardStacks());
         jsonArray.put(getJsonScoreBoard());
-        jsonArray.put(players[0].getCards());
+        Arrays.stream(players)
+                .filter(p -> p.getName().equals("Player1"))
+                .findFirst()
+                .ifPresent(p -> jsonArray.put(p.getCards()));
         jsonArray.put("stack taken");
 
         return jsonArray;
