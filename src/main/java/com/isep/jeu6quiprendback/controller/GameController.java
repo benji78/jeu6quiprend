@@ -1,9 +1,6 @@
 package com.isep.jeu6quiprendback.controller;
 
-import com.isep.jeu6quiprendback.DTO.CardsDto;
-import com.isep.jeu6quiprendback.DTO.GameResponseDto;
-import com.isep.jeu6quiprendback.DTO.SelectCardRequestDto;
-import com.isep.jeu6quiprendback.DTO.StartResponseDto;
+import com.isep.jeu6quiprendback.DTO.*;
 import com.isep.jeu6quiprendback.service.GameService;
 import com.isep.jeu6quiprendback.util.Card;
 import org.springframework.web.bind.annotation.*;
@@ -27,13 +24,18 @@ public class GameController {
     @PostMapping("/selectCard")
     public GameResponseDto selectCard(@RequestBody SelectCardRequestDto selectCardRequestDto) {
         // @todo add parameters for the game
-        return gameService.selectCard(selectCardRequestDto.getCardId(), selectCardRequestDto.getPlayerName());
+        return gameService.selectCard(selectCardRequestDto.getCardId());
     }
 
     @GetMapping("/getAllCards")
     public CardsDto getAllCards() {
         // @todo add parameters for the game
         return gameService.getAllCards();
+    }
+
+    @PostMapping("/selectStack")
+    public GameResponseDto selectStack(@RequestBody StackDto stackDto) {
+        return gameService.takeStack(stackDto.getStackId(), stackDto.getPlayerId());
     }
 
 }

@@ -2,6 +2,7 @@ package com.isep.jeu6quiprendback.service;
 
 import com.isep.jeu6quiprendback.DTO.CardsDto;
 import com.isep.jeu6quiprendback.DTO.GameResponseDto;
+import com.isep.jeu6quiprendback.DTO.StackDto;
 import com.isep.jeu6quiprendback.DTO.StartResponseDto;
 import com.isep.jeu6quiprendback.util.Game;
 import org.json.JSONArray;
@@ -31,18 +32,20 @@ public class GameService {
                 .build();
     }
 
-    public GameResponseDto selectCard(int cardId, String playerName) {
+    public GameResponseDto selectCard(int cardId) {
 
-        JSONArray jsonArray = game.selectCard(cardId, playerName);
+        JSONArray jsonArray = game.selectCard(cardId);
 
         String cardStacksJson = jsonArray.get(0).toString();
         String scoreBoardJson = jsonArray.get(1).toString();
         String playerCardsJson = jsonArray.get(2).toString();
+        String message = jsonArray.get(3).toString();
 
         return GameResponseDto.builder()
                 .cardStacksJson(cardStacksJson)
                 .scoreBoardJson(scoreBoardJson)
                 .playerCardsJson(playerCardsJson)
+                .message(message)
                 .build();
 
     }
@@ -58,5 +61,20 @@ public class GameService {
                 .cardsJson(playerCardsJson)
                 .build();
 
+    }
+
+    public GameResponseDto takeStack(int stackId, int playerId){
+        JSONArray jsonArray = game.selectStack(stackId, playerId);
+
+        String cardStacksJson = jsonArray.get(0).toString();
+        String scoreBoardJson = jsonArray.get(1).toString();
+        String playerCardsJson = jsonArray.get(2).toString();
+
+        return GameResponseDto
+                .builder()
+                .cardStacksJson(cardStacksJson)
+                .scoreBoardJson(scoreBoardJson)
+                .playerCardsJson(playerCardsJson)
+                .build();
     }
 }

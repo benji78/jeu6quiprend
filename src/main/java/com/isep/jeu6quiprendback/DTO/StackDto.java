@@ -5,7 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SelectCardRequestDto {
+public class StackDto {
 
-    private int cardId;
+    private int stackId;
+    private int playerId;
+
 }

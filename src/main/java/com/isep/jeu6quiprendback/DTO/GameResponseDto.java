@@ -14,5 +14,6 @@ public class GameResponseDto {
     private String cardStacksJson;
     private String scoreBoardJson;
     private String playerCardsJson;
+    private String message;
 
 }
