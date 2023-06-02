@@ -2,10 +2,8 @@ package com.isep.jeu6quiprendback.service;
 
 import com.isep.jeu6quiprendback.DTO.CardsDto;
 import com.isep.jeu6quiprendback.DTO.GameResponseDto;
-import com.isep.jeu6quiprendback.DTO.StackDto;
 import com.isep.jeu6quiprendback.DTO.StartResponseDto;
 import com.isep.jeu6quiprendback.util.Game;
-import com.isep.jeu6quiprendback.util.GameLogic;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +34,8 @@ public class GameService {
     public GameResponseDto selectCard(int cardId) {
 
         JSONArray jsonArray = game.selectCard(cardId);
+
+        System.out.println(jsonArray);
 
         String cardStacksJson = jsonArray.get(0).toString();
         String scoreBoardJson = jsonArray.get(1).toString();
