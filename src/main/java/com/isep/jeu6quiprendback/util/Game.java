@@ -155,6 +155,10 @@ public class Game {
                 }
 
             }
+
+            if (this.players[0].getCards().isEmpty() && this.players[1].getCards().isEmpty()) {
+                this.cardStacks = Cards.distributeRandomCards(this.players);
+            }
         }
     }
 

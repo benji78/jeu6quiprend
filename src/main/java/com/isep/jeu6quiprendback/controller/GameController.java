@@ -6,7 +6,7 @@ import com.isep.jeu6quiprendback.util.Card;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/game")
+@RequestMapping("/api/")
 public class GameController {
 
     private final GameService gameService;
