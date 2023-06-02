@@ -8,6 +8,6 @@ import lombok.Setter;
 public class StackDto {
 
     private int stackId;
-    private int playerId;
+    private String name;
 
 }

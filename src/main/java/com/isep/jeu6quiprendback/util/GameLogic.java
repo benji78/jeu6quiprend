@@ -10,9 +10,10 @@ import java.util.Arrays;
 public class GameLogic {
 
     private boolean gameStarted = false;
-    private boolean needToTakeStack = false;
     private Player[] players;
     private CardStack[] cardStacks;
+    // array that will contain the cards that the players have selected
+    private Card[] selectedCards = new Card[2];
 
     public JSONArray start() {
         if (gameStarted)
@@ -48,131 +49,53 @@ public class GameLogic {
         return jsonArray;
     }
 
-    //method to select a card and return the new cardStacks and scoreboard
     public JSONArray selectCard(int cardId) {
         if (!gameStarted)
             throw new IllegalStateException("Game not started");
         if (cardId < 0 || cardId > 104)
             throw new IllegalArgumentException("Card id must be between 0 and 104");
-        //find player named "Player1"
-        Player player = Arrays.stream(players)
+
+        // get the card from the player's hand
+        Card card = Arrays.stream(players)
                 .filter(p -> p.getName().equals("Player1"))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Player1 not found"));
-        Card selectedCard = player.getCards().stream()
+                .orElseThrow(() -> new IllegalStateException("Player1 not found"))
+                .getCards().stream()
                 .filter(c -> c.getValue() == cardId)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Player " + players[0].getName() + " does not have card " + cardId));
-        player.setSelectedCard(selectedCard);
+                .orElseThrow(() -> new IllegalArgumentException("Card not found"));
 
-        //bot always select higher card
-        players[1].setSelectedCard(players[1].getCards().stream().max(Card::compareTo).get());
+        // add the card to the selected cards array
+        selectedCards[0] = card;
 
-        checkSelectedCards();
-        cardSelected();
+        //add the card from the bot to the selected cards array
+        selectedCards[1] = Arrays.stream(players)
+                .filter(p -> p.getName().equals("Bot"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Bot not found"))
+                .getCards().stream().findFirst().orElseThrow(() -> new IllegalStateException("Bot has no cards"));
 
-        JSONArray jsonArray = new JSONArray();
-
-        if(needToTakeStack){
-            jsonArray.put(getJsonCardStacks());
-            jsonArray.put(getJsonScoreBoard());
-            Arrays.stream(players)
-                    .filter(p -> p.getName().equals("Player1"))
-                    .findFirst()
-                    .ifPresent(p -> jsonArray.put(p.getCards()));
-            jsonArray.put("error, player needs to take stack");
-        } else {
-            jsonArray.put(getJsonCardStacks());
-            jsonArray.put(getJsonScoreBoard());
-            Arrays.stream(players)
-                    .filter(p -> p.getName().equals("Player1"))
-                    .findFirst()
-                    .ifPresent(p -> jsonArray.put(p.getCards()));
-            jsonArray.put("ok");
-        }
-
-        return jsonArray;
-    }
-
-
-    public void checkSelectedCards(){
-        for (Player player : players) {
-            Card selectedCard = player.getSelectedCard();
-            if (selectedCard == null)
-                throw new IllegalStateException("Player " + player.getName() + " has no selected card");
-            if (!player.getCards().contains(selectedCard))
-                throw new IllegalStateException("Player " + player.getName() + " does not own the selected card");
-        }
-    }
-
-    //method to take a stack and return the new cardStacks and scoreboard based on the card selected
-    public void cardSelected(){
-        // sort the players' selected cards by value
-        Arrays.sort(players);
-
-        // put selected cards in the card stacks with the smallest difference
-        // otherwise the player has to choose a stack, so we return a message to the client
-        for (Player player : players) {
-
-            Card selectedCard = player.getSelectedCard();
-            System.out.println("selected card: " + selectedCard);
-            int stackDifference = Integer.MAX_VALUE;
-            CardStack selectedCardStack = null;
-
-            for (CardStack cardStack : cardStacks) { // for each card stack
-                if (selectedCard.getValue() < cardStack.getTopValue()) { // card's value too small for this stack
-                    continue;
-                }
-                if (selectedCard.getValue() - cardStack.getTopValue() < stackDifference) { // card's value is closer to the top of this stack
-                    stackDifference = selectedCard.getValue() - cardStack.getTopValue(); // update the difference
-                    selectedCardStack = cardStack; // update the selected card stack
-                }
-            }
-
-            if (selectedCardStack != null) { // if a card stack was found
-                selectedCardStack.addCardMayTake(player); // add the card to the stack
-                continue;
-            } else { // if no card stack was found
-                needToTakeStack = true;
-
-                //check if the player is the bot
-                if(player.getName().equals("Bot")){
-                    //bot always take the stack
-                    selectStack(player.chooseRandomRow(), 1);
-                }
-
-            }
-        }
-    }
-
-    public JSONArray selectStack(int stackId, int playerId){
-        if (!gameStarted)
-            throw new IllegalStateException("Game not started");
-        if (!needToTakeStack)
-            throw new IllegalStateException("No need to take stack");
-        if (stackId < 0 || stackId > 3)
-            throw new IllegalArgumentException("Stack id must be between 0 and 3");
-
-        Player player = players[playerId];
-        CardStack selectedStack = cardStacks[stackId];
-        player.takeCardStack(selectedStack);
-
-        needToTakeStack = false;
+        // now i want the main method to check the cards
+        checkCards();
 
         JSONArray jsonArray = new JSONArray();
+
         jsonArray.put(getJsonCardStacks());
         jsonArray.put(getJsonScoreBoard());
         Arrays.stream(players)
                 .filter(p -> p.getName().equals("Player1"))
                 .findFirst()
                 .ifPresent(p -> jsonArray.put(p.getCards()));
-        jsonArray.put("stack taken");
+        jsonArray.put("ok");
 
         return jsonArray;
     }
 
+    public void checkCards(){
 
-    // Method to get the JSON representation of the card stacks
+    }
+
+
     public JSONArray getJsonCardStacks() {
         JSONArray jsonArray = new JSONArray();
 
@@ -203,5 +126,7 @@ public class GameLogic {
 
         return jsonArray;
     }
+
+
 
 }

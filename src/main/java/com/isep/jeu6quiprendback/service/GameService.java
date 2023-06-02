@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameService {
 
-    private final GameLogic game; // Inject the Game instance
+    private final Game game; // Inject the Game instance
 
-    public GameService(GameLogic game) {
+    public GameService(Game game) {
         this.game = game;
     }
 
@@ -64,8 +64,8 @@ public class GameService {
 
     }
 
-    public GameResponseDto takeStack(int stackId, int playerId){
-        JSONArray jsonArray = game.selectStack(stackId, playerId);
+    public GameResponseDto takeStack(int stackId, String name){
+        JSONArray jsonArray = game.selectStack(stackId, name);
 
         String cardStacksJson = jsonArray.get(0).toString();
         String scoreBoardJson = jsonArray.get(1).toString();

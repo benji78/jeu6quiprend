@@ -35,7 +35,7 @@ public class GameController {
 
     @PostMapping("/selectStack")
     public GameResponseDto selectStack(@RequestBody StackDto stackDto) {
-        return gameService.takeStack(stackDto.getStackId(), stackDto.getPlayerId());
+        return gameService.takeStack(stackDto.getStackId(), stackDto.getName());
     }
 
 }
